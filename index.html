@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Naisha Sarna</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ââ Tohsaka palette ââ */
+    :root {
+      --bg:      #0c0709;
+      --surf:    #130a0e;
+      --surf2:   #1c1016;
+      --border:  #30151e;
+      --cr:      #c8102e;   /* Rin crimson */
+      --cr-hi:   #e8283e;
+      --cr-dim:  #7a0b1c;
+      --cr-glow: rgba(200,16,46,.14);
+      --gold:    #d4a94a;
+      --text:    #f0dce2;
+      --muted:   #7a5862;
+      --faint:   #3d1822;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Inter',sans-serif;
+      font-weight:300;
+      line-height:1.7;
+      overflow-x:hidden;
+    }
+
+    /* ââ NAV ââ */
+    nav{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:26px 64px;
+      border-bottom:1px solid var(--border);
+      position:sticky;top:0;
+      background:rgba(12,7,9,.95);
+      backdrop-filter:blur(8px);
+      z-index:200;
+    }
+    .nav-name{
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.1rem;font-weight:600;
+      letter-spacing:.1em;color:var(--text);text-decoration:none;
+    }
+    .nav-links{display:flex;gap:34px}
+    .nav-links a{
+      font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--muted);text-decoration:none;transition:color .2s;
+    }
+    .nav-links a:hover{color:var(--text)}
+    .nav-links a.active{color:var(--cr)}
+
+    /* ââ HERO ââ */
+    .hero-wrap{
+      position:relative;
+      overflow:hidden;
+      padding:100px 64px 80px;
+      max-width:900px;
+      margin:0 auto;
+    }
+
+    /* magical-circle background SVG */
+    .magic-circle{
+      position:absolute;
+      right:-120px;top:50%;transform:translateY(-50%);
+      width:520px;height:520px;
+      opacity:.055;
+      pointer-events:none;
+      animation:spin 60s linear infinite;
+    }
+    @keyframes spin{to{transform:translateY(-50%) rotate(360deg)}}
+
+    .hero-wrap h1{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(3rem,8vw,6rem);
+      font-weight:300;line-height:1;
+      letter-spacing:-.02em;
+      margin-bottom:28px;
+    }
+
+    .hero-tagline{
+      font-family:'Cormorant Garamond',serif;
+      font-style:italic;
+      font-size:1.25rem;
+      color:var(--muted);
+      max-width:440px;
+      line-height:1.55;
+      margin-bottom:50px;
+    }
+
+    /* command seal in hero */
+    .seal-hero{
+      position:absolute;
+      right:64px;top:50%;transform:translateY(-50%);
+      width:200px;height:200px;
+      color:var(--cr);
+      opacity:.18;
+      pointer-events:none;
+      filter:drop-shadow(0 0 18px var(--cr));
+    }
+
+    .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+
+    .btn{
+      display:inline-block;
+      padding:13px 30px;
+      font-family:'Inter',sans-serif;
+      font-size:.72rem;font-weight:400;
+      letter-spacing:.14em;text-transform:uppercase;
+      text-decoration:none;transition:all .2s;
+    }
+    .btn-primary{background:var(--cr);color:#f5e0e5}
+    .btn-primary:hover{background:var(--cr-hi)}
+    .btn-outline{
+      background:transparent;color:var(--muted);
+      border:1px solid var(--border);
+    }
+    .btn-outline:hover{border-color:var(--muted);color:var(--text)}
+
+    /* ââ DIVIDER ââ */
+    .seal-divider{
+      display:flex;align-items:center;gap:18px;
+      max-width:900px;margin:80px auto;padding:0 64px;
+    }
+    .seal-divider::before,.seal-divider::after{
+      content:'';flex:1;height:1px;background:var(--border);
+    }
+    .seal-divider svg{width:28px;height:28px;color:var(--cr);opacity:.6;flex-shrink:0}
+
+    /* ââ ABOUT ââ */
+    .about{
+      max-width:900px;margin:0 auto;padding:0 64px;
+      display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:start;
+    }
+
+    .sec-label{
+      font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+      color:var(--cr);
+      padding-left:12px;border-left:1.5px solid var(--cr);
+      margin-bottom:22px;display:block;
+    }
+
+    .about-text h2{
+      font-family:'Cormorant Garamond',serif;
+      font-size:2.1rem;font-weight:400;line-height:1.2;
+      margin-bottom:22px;
+    }
+    .about-text p{
+      color:var(--muted);font-size:.88rem;line-height:1.9;margin-bottom:13px;
+    }
+    .about-text p:last-child{margin-bottom:0}
+
+    /* education chip */
+    .edu-chip{
+      display:inline-flex;align-items:center;gap:10px;
+      background:var(--surf);border:1px solid var(--border);
+      padding:10px 16px;margin-bottom:22px;
+    }
+    .edu-chip .mark{
+      width:6px;height:6px;background:var(--gold);transform:rotate(45deg);flex-shrink:0;
+    }
+    .edu-chip span{font-size:.78rem;color:var(--muted);line-height:1.4}
+    .edu-chip strong{color:var(--text);font-weight:500}
+
+    /* ââ SKILLS ââ */
+    .skills{padding-top:4px}
+    .skill-tags{display:flex;flex-wrap:wrap;gap:7px}
+    .skill-tag{
+      font-size:.75rem;color:var(--muted);
+      border:1px solid var(--border);padding:4px 13px;
+      transition:border-color .2s,color .2s;cursor:default;
+    }
+    .skill-tag:hover{border-color:var(--cr);color:var(--text)}
+    .skill-tag.gold{border-color:rgba(212,169,74,.35);color:var(--gold)}
+
+    /* ââ CONNECT ââ */
+    .connect{
+      max-width:900px;margin:80px auto 100px;padding:0 64px;
+    }
+    .connect-inner{display:flex;align-items:center;gap:32px}
+    .seal-connect{
+      width:72px;height:80px;color:var(--cr);opacity:.22;flex-shrink:0;
+      filter:drop-shadow(0 0 10px var(--cr));
+    }
+    .connect-links{display:flex;gap:28px;margin-top:18px;flex-wrap:wrap}
+    .connect-links a{
+      font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--muted);text-decoration:none;
+      display:flex;align-items:center;gap:9px;transition:color .2s;
+    }
+    .connect-links a::before{content:'â';font-size:.44rem;color:var(--cr)}
+    .connect-links a:hover{color:var(--text)}
+
+    /* ââ FOOTER ââ */
+    footer{
+      border-top:1px solid var(--border);
+      padding:24px 64px;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    footer p{font-size:.7rem;color:var(--faint);letter-spacing:.06em}
+
+    @media(max-width:700px){
+      nav{padding:20px 24px}
+      .hero-wrap{padding:60px 24px 60px}
+      .seal-hero{display:none}
+      .magic-circle{display:none}
+      .about{padding:0 24px;grid-template-columns:1fr;gap:40px}
+      .seal-divider{padding:0 24px}
+      .connect{padding:0 24px}
+      .connect-inner{gap:20px}
+      .seal-connect{width:52px;height:58px}
+      footer{padding:24px;flex-direction:column;gap:8px;text-align:center}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ââ NAV ââ -->
+<nav>
+  <a href="index.html" class="nav-name">Naisha Sarna</a>
+  <div class="nav-links">
+    <a href="index.html" class="active">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="trading.html">Trading</a>
+  </div>
+</nav>
+
+<!-- ââ HERO ââ -->
+<div class="hero-wrap">
+
+  <!-- rotating magical circle -->
+  <svg class="magic-circle" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="250" cy="250" r="240" stroke="#c8102e" stroke-width="1.2"/>
+    <circle cx="250" cy="250" r="210" stroke="#c8102e" stroke-width=".6"/>
+    <circle cx="250" cy="250" r="170" stroke="#c8102e" stroke-width=".8"/>
+    <circle cx="250" cy="250" r="120" stroke="#c8102e" stroke-width=".6"/>
+    <circle cx="250" cy="250" r="70"  stroke="#c8102e" stroke-width=".6"/>
+    <!-- hexagon -->
+    <polygon points="250,30 462,135 462,365 250,470 38,365 38,135" stroke="#c8102e" stroke-width=".7" fill="none"/>
+    <!-- inner cross lines -->
+    <line x1="250" y1="10"  x2="250" y2="490" stroke="#c8102e" stroke-width=".4"/>
+    <line x1="10"  y1="250" x2="490" y2="250" stroke="#c8102e" stroke-width=".4"/>
+    <line x1="74"  y1="74"  x2="426" y2="426" stroke="#c8102e" stroke-width=".4"/>
+    <line x1="426" y1="74"  x2="74"  y2="426" stroke="#c8102e" stroke-width=".4"/>
+    <!-- rune marks on outer ring -->
+    <rect x="244" y="5"   width="12" height="5"  fill="#c8102e" opacity=".7"/>
+    <rect x="244" y="490" width="12" height="5"  fill="#c8102e" opacity=".7"/>
+    <rect x="5"   y="244" width="5"  height="12" fill="#c8102e" opacity=".7"/>
+    <rect x="490" y="244" width="5"  height="12" fill="#c8102e" opacity=".7"/>
+    <!-- small diamonds at hex vertices -->
+    <polygon points="250,24 255,30 250,36 245,30" fill="#c8102e"/>
+    <polygon points="250,464 255,470 250,476 245,470" fill="#c8102e"/>
+  </svg>
+
+  <!-- command seal (large, faint) â Rin Tohsaka: spike + open ring -->
+  <svg class="seal-hero" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- spike -->
+    <path d="M100,12 C100.3,22 101.8,50 102.1,78 L100,90 L97.9,78 C98.2,50 99.7,22 100,12Z" fill="currentColor"/>
+    <!-- near-complete ring, open at top where spike meets it -->
+    <path d="M103.5,96 A58,58 0 1,1 96.5,96" stroke="currentColor" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <!-- inner spiral tail at start of ring -->
+    <path d="M103.5,96 A47,47 0 0,0 103,107" stroke="currentColor" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <h1>Naisha Sarna.</h1>
+  <p class="hero-tagline">Applied math. Systematic trading.</p>
+  <div class="hero-actions">
+    <a href="trading.html" class="btn btn-primary">Trading</a>
+    <a href="projects.html" class="btn btn-outline">Projects</a>
+  </div>
+</div>
+
+<!-- ââ DIVIDER ââ -->
+<div class="seal-divider">
+  <svg viewBox="0 0 40 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20,1.5 C20.06,4.4 20.36,10 20.42,15.6 L20,18 L19.58,15.6 C19.64,10 19.94,4.4 20,1.5Z" fill="currentColor"/>
+    <path d="M20.7,19.2 A11.4,11.4 0 1,1 19.3,19.2" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M20.7,19.2 A9.2,9.2 0 0,0 20.65,21.4" stroke="currentColor" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+  </svg>
+</div>
+
+<!-- ââ ABOUT ââ -->
+<div class="about">
+  <div class="about-text">
+    <span class="sec-label">About</span>
+
+    <div class="edu-chip">
+      <div class="mark"></div>
+      <span><strong>Purdue University</strong> Â· B.S. Applied Mathematics, Minor in Finance Â· 2024â2028</span>
+    </div>
+
+    <!-- EDIT: Write a quick intro about yourself here -->
+    <p>Applied math student at Purdue. I build trading tools and quant stuff at MOMENTUM, and I trade my own account on the side.</p>
+    <p><!-- EDIT: Add something about what you work on or care about -->Started with swing trading, ended up building backtesting frameworks, an arb engine, and a news aggregator. The math just kept pulling me in.</p>
+    <p><!-- EDIT: Update internship year as needed -->Looking for quant / trading / software internships for Summer 2027.</p>
+  </div>
+
+  <div class="skills">
+    <span class="sec-label">Skills</span>
+
+    <div class="skill-tags">
+      <span class="skill-tag">Python</span>
+      <span class="skill-tag">Java</span>
+      <span class="skill-tag">SQL</span>
+      <span class="skill-tag">NumPy</span>
+      <span class="skill-tag">Pandas</span>
+      <span class="skill-tag">Matplotlib</span>
+      <span class="skill-tag">SciPy</span>
+      <span class="skill-tag">scikit-learn</span>
+      <span class="skill-tag">yFinance</span>
+      <span class="skill-tag">TA-Lib</span>
+      <span class="skill-tag">statsmodels</span>
+      <span class="skill-tag">FastAPI</span>
+      <span class="skill-tag">PostgreSQL</span>
+      <span class="skill-tag">React</span>
+      <span class="skill-tag">Flask</span>
+      <span class="skill-tag">Backtesting.py</span>
+      <span class="skill-tag">Financial Math</span>
+      <span class="skill-tag">Probability</span>
+      <span class="skill-tag">Linear Algebra</span>
+      <span class="skill-tag">Options Pricing</span>
+    </div>
+  </div>
+</div>
+
+<div class="seal-divider">
+  <svg viewBox="0 0 40 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20,1.5 C20.06,4.4 20.36,10 20.42,15.6 L20,18 L19.58,15.6 C19.64,10 19.94,4.4 20,1.5Z" fill="currentColor"/>
+    <path d="M20.7,19.2 A11.4,11.4 0 1,1 19.3,19.2" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M20.7,19.2 A9.2,9.2 0 0,0 20.65,21.4" stroke="currentColor" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+  </svg>
+</div>
+
+<!-- ââ CONNECT ââ -->
+<div class="connect">
+  <div class="connect-inner">
+    <!-- command seal (small accent) â Rin Tohsaka seal -->
+    <svg class="seal-connect" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100,12 C100.3,22 101.8,50 102.1,78 L100,90 L97.9,78 C98.2,50 99.7,22 100,12Z" fill="currentColor"/>
+      <path d="M103.5,96 A58,58 0 1,1 96.5,96" stroke="currentColor" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <path d="M103.5,96 A47,47 0 0,0 103,107" stroke="currentColor" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <span class="sec-label">Connect</span>
+      <div class="connect-links">
+        <a href="https://github.com/naibai101" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:nsarna@purdue.edu">Email</a>
+        <a href="https://linkedin.com/in/naisha-sarna" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Naisha Sarna &nbsp;â&nbsp; naibai101.github.io</p>
+  <p>Â© 2026</p>
+</footer>
+
+</body>
+</html>

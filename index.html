@@ -62,7 +62,7 @@
     .hero-wrap{
       position:relative;
       overflow:hidden;
-      padding:100px 64px 80px;
+      padding:56px 64px 56px;
       max-width:900px;
       margin:0 auto;
     }
@@ -128,7 +128,7 @@
     /* ââ DIVIDER ââ */
     .seal-divider{
       display:flex;align-items:center;gap:18px;
-      max-width:900px;margin:80px auto;padding:0 64px;
+      max-width:900px;margin:44px auto;padding:0 64px;
     }
     .seal-divider::before,.seal-divider::after{
       content:'';flex:1;height:1px;background:var(--border);
@@ -172,6 +172,12 @@
 
     /* ââ SKILLS ââ */
     .skills{padding-top:4px}
+    .skill-group{margin-bottom:16px}
+    .skill-group:last-child{margin-bottom:0}
+    .skill-group-label{
+      font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;
+      color:var(--cr-dim);display:block;margin-bottom:7px;
+    }
     .skill-tags{display:flex;flex-wrap:wrap;gap:7px}
     .skill-tag{
       font-size:.75rem;color:var(--muted);
@@ -261,13 +267,11 @@
   </svg>
 
   <!-- command seal (large, faint) â Rin Tohsaka: spike + open ring -->
-  <svg class="seal-hero" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- spike -->
-    <path d="M100,12 C100.3,22 101.8,50 102.1,78 L100,90 L97.9,78 C98.2,50 99.7,22 100,12Z" fill="currentColor"/>
-    <!-- near-complete ring, open at top where spike meets it -->
-    <path d="M103.5,96 A58,58 0 1,1 96.5,96" stroke="currentColor" stroke-width="11" fill="none" stroke-linecap="round"/>
-    <!-- inner spiral tail at start of ring -->
-    <path d="M103.5,96 A47,47 0 0,0 103,107" stroke="currentColor" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <svg class="seal-hero" viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- spike: elongated teardrop, ~14px wide at base -->
+    <path d="M100,8 C104,26 108,60 108,86 L100,94 L92,86 C92,60 96,26 100,8Z" fill="currentColor"/>
+    <!-- near-complete ring: center ~(100,154), r=60, gap at top where spike sits -->
+    <path d="M108,94 A60,60 0 1,1 92,94" stroke="currentColor" stroke-width="13" fill="none" stroke-linecap="round"/>
   </svg>
 
   <h1>Naisha Sarna.</h1>
@@ -280,10 +284,9 @@
 
 <!-- ââ DIVIDER ââ -->
 <div class="seal-divider">
-  <svg viewBox="0 0 40 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20,1.5 C20.06,4.4 20.36,10 20.42,15.6 L20,18 L19.58,15.6 C19.64,10 19.94,4.4 20,1.5Z" fill="currentColor"/>
-    <path d="M20.7,19.2 A11.4,11.4 0 1,1 19.3,19.2" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-    <path d="M20.7,19.2 A9.2,9.2 0 0,0 20.65,21.4" stroke="currentColor" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+  <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20,1.6 C20.8,5.2 21.6,12 21.6,17.2 L20,18.8 L18.4,17.2 C18.4,12 19.2,5.2 20,1.6Z" fill="currentColor"/>
+    <path d="M21.6,18.8 A12,12 0 1,1 18.4,18.8" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round"/>
   </svg>
 </div>
 
@@ -306,36 +309,53 @@
   <div class="skills">
     <span class="sec-label">Skills</span>
 
-    <div class="skill-tags">
-      <span class="skill-tag">Python</span>
-      <span class="skill-tag">Java</span>
-      <span class="skill-tag">SQL</span>
-      <span class="skill-tag">NumPy</span>
-      <span class="skill-tag">Pandas</span>
-      <span class="skill-tag">Matplotlib</span>
-      <span class="skill-tag">SciPy</span>
-      <span class="skill-tag">scikit-learn</span>
-      <span class="skill-tag">yFinance</span>
-      <span class="skill-tag">TA-Lib</span>
-      <span class="skill-tag">statsmodels</span>
-      <span class="skill-tag">FastAPI</span>
-      <span class="skill-tag">PostgreSQL</span>
-      <span class="skill-tag">React</span>
-      <span class="skill-tag">Flask</span>
-      <span class="skill-tag">Backtesting.py</span>
-      <span class="skill-tag">Financial Math</span>
-      <span class="skill-tag">Probability</span>
-      <span class="skill-tag">Linear Algebra</span>
-      <span class="skill-tag">Options Pricing</span>
+    <div class="skill-group">
+      <span class="skill-group-label">Languages</span>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">SQL</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <span class="skill-group-label">Libraries</span>
+      <div class="skill-tags">
+        <span class="skill-tag">NumPy</span>
+        <span class="skill-tag">Pandas</span>
+        <span class="skill-tag">Matplotlib</span>
+        <span class="skill-tag">SciPy</span>
+        <span class="skill-tag">scikit-learn</span>
+        <span class="skill-tag">yFinance</span>
+        <span class="skill-tag">TA-Lib</span>
+        <span class="skill-tag">statsmodels</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <span class="skill-group-label">Frameworks</span>
+      <div class="skill-tags">
+        <span class="skill-tag">FastAPI</span>
+        <span class="skill-tag">Flask</span>
+        <span class="skill-tag">React</span>
+        <span class="skill-tag">PostgreSQL</span>
+        <span class="skill-tag">Backtesting.py</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <span class="skill-group-label">Quant</span>
+      <div class="skill-tags">
+        <span class="skill-tag">Financial Math</span>
+        <span class="skill-tag">Probability</span>
+        <span class="skill-tag">Linear Algebra</span>
+        <span class="skill-tag">Options Pricing</span>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="seal-divider">
-  <svg viewBox="0 0 40 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20,1.5 C20.06,4.4 20.36,10 20.42,15.6 L20,18 L19.58,15.6 C19.64,10 19.94,4.4 20,1.5Z" fill="currentColor"/>
-    <path d="M20.7,19.2 A11.4,11.4 0 1,1 19.3,19.2" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-    <path d="M20.7,19.2 A9.2,9.2 0 0,0 20.65,21.4" stroke="currentColor" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+  <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20,1.6 C20.8,5.2 21.6,12 21.6,17.2 L20,18.8 L18.4,17.2 C18.4,12 19.2,5.2 20,1.6Z" fill="currentColor"/>
+    <path d="M21.6,18.8 A12,12 0 1,1 18.4,18.8" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round"/>
   </svg>
 </div>
 
@@ -343,10 +363,9 @@
 <div class="connect">
   <div class="connect-inner">
     <!-- command seal (small accent) â Rin Tohsaka seal -->
-    <svg class="seal-connect" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M100,12 C100.3,22 101.8,50 102.1,78 L100,90 L97.9,78 C98.2,50 99.7,22 100,12Z" fill="currentColor"/>
-      <path d="M103.5,96 A58,58 0 1,1 96.5,96" stroke="currentColor" stroke-width="11" fill="none" stroke-linecap="round"/>
-      <path d="M103.5,96 A47,47 0 0,0 103,107" stroke="currentColor" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    <svg class="seal-connect" viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100,8 C104,26 108,60 108,86 L100,94 L92,86 C92,60 96,26 100,8Z" fill="currentColor"/>
+      <path d="M108,94 A60,60 0 1,1 92,94" stroke="currentColor" stroke-width="13" fill="none" stroke-linecap="round"/>
     </svg>
     <div>
       <span class="sec-label">Connect</span>

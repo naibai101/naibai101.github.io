@@ -126,9 +126,33 @@
       .seal-divider{padding:0 24px}
       footer{padding:24px;flex-direction:column;gap:8px}
     }
+
+    /* ââ VN ATMOSPHERE ââ */
+    .vn-overlay{
+      position:fixed;inset:0;pointer-events:none;z-index:10;
+      background:
+        radial-gradient(ellipse at 50% 35%,transparent 30%,rgba(12,7,9,.52) 100%),
+        repeating-linear-gradient(to bottom,transparent,transparent 3px,rgba(0,0,0,.028) 3px,rgba(0,0,0,.028) 4px);
+    }
+    .vn-scene{
+      display:block;
+      font-family:'Cormorant Garamond',serif;font-style:italic;
+      font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;
+      color:var(--cr);opacity:.55;margin-bottom:16px;
+    }
+    /* corner ornament on project cards (bottom-right) */
+    .project-card::after{
+      content:'';position:absolute;bottom:-1px;right:-1px;
+      width:11px;height:11px;
+      border-bottom:2px solid rgba(200,16,46,.55);
+      border-right:2px solid rgba(200,16,46,.55);
+      transition:border-color .2s;
+    }
+    .project-card:hover::after{border-color:var(--cr)}
   </style>
 </head>
 <body>
+<div class="vn-overlay"></div>
 
 <nav>
   <a href="index.html" class="nav-name">Naisha Sarna</a>
@@ -152,6 +176,238 @@
     <line x1="426" y1="74" x2="74" y2="426" stroke="#c8102e" stroke-width=".4"/>
   </svg>
 
+  <span class="vn-scene">â Record of Works â</span>
+  <h1>Projects.</h1>
+</div>
+
+<!-- PROJECTS -->
+<div class="projects-wrap">
+  <div class="projects-grid">
+
+    <!-- Pairs Trading Strategy -->
+    <div class="project-card">
+      <div class="proj-top">
+        <span class="proj-name">Pairs Trading Strategy</span>
+      </div>
+      <ul class="proj-bullets">
+        <li>Statistical arb system screening S&amp;P 500 for correlated pairs (r â¥ 0.85) via Engle-Granger cointegration; mean-reverting spreads built with rolling OLS hedge ratios</li>
+        <li>Z-score signal engine (entry z &gt; 2.0, exit z &lt; 0.5, stop-loss z &gt; 3.5) + transaction cost simulation; backtested top 10 pairs on 15 years of out-of-sample data â Sharpe, Calmar, profit factor, max drawdown reported per pair</li>
+        <li>Fully automated from data ingestion to per-pair equity curve generation</li>
+      </ul>
+      <div class="proj-tags">
+        <span class="proj-tag">Python</span>
+        <span class="proj-tag">statsmodels</span>
+        <span class="proj-tag">pandas</span>
+        <span class="proj-tag">yFinance</span>
+      </div>
+      <div class="proj-links">
+        <a class="proj-link proj-link-gh" href="https://github.com/naibai101/pairs-trading-strategy" target="_blank" rel="noopener">â¥ GitHub</a>
+      </div>
+    </div>
+
+    <!-- Swing Trading Backtester -->
+    <div class="project-card">
+      <div class="proj-top">
+        <span class="proj-name">Swing Trading Backtester</span>
+      </div>
+      <ul class="proj-bullets">
+        <li>Multi-timeframe momentum strategy across 8 equities, 25 years of data â ~57% win rate, up to 198% return (AMD) across 788 simulated trades</li>
+        <li>Breakout detection via volume surge + HH/HL structure + 5-criteria bull flag filter; positive Sharpe on 6 of 8 tickers</li>
+        <li>4-condition exit system + 6-panel Matplotlib dashboards tracking win rate, rolling accuracy, and per-trade P&amp;L</li>
+      </ul>
+      <div class="proj-tags">
+        <span class="proj-tag">Python</span>
+        <span class="proj-tag">Backtesting.py</span>
+        <span class="proj-tag">TA-Lib</span>
+      </div>
+      <div class="proj-links">
+        <a class="proj-link proj-link-gh" href="https://github.com/naibai101/breakout-backtester" target="_blank" rel="noopener">â¥ GitHub</a>
+      </div>
+    </div>
+
+    <!-- Market News Dashboard -->
+    <div class="project-card">
+      <div class="proj-top">
+        <span class="proj-name">Market News Dashboard</span>
+      </div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projects â Naisha Sarna</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0c0709;--surf:#130a0e;--surf2:#1c1016;--border:#30151e;
+      --cr:#c8102e;--cr-hi:#e8283e;--gold:#4ab8d4;
+      --text:#f0dce2;--muted:#7a5862;--faint:#3d1822;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden}
+
+    nav{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:26px 64px;border-bottom:1px solid var(--border);
+      position:sticky;top:0;background:rgba(12,7,9,.95);backdrop-filter:blur(8px);z-index:200;
+    }
+    .nav-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;letter-spacing:.1em;color:var(--text);text-decoration:none}
+    .nav-links{display:flex;gap:34px}
+    .nav-links a{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:var(--text)}
+    .nav-links a.active{color:var(--cr)}
+
+    /* page header */
+    .page-header{
+      position:relative;overflow:hidden;
+      max-width:900px;margin:0 auto;
+      padding:90px 64px 60px;
+    }
+    .magic-circle-sm{
+      position:absolute;right:-60px;top:50%;transform:translateY(-50%);
+      width:320px;height:320px;opacity:.05;pointer-events:none;
+      animation:spin 80s linear infinite;
+    }
+    @keyframes spin{to{transform:translateY(-50%) rotate(360deg)}}
+
+    .sec-label{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cr);padding-left:12px;border-left:1.5px solid var(--cr);margin-bottom:20px;display:block}
+    .page-header h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,7vw,4.5rem);font-weight:300;line-height:1;margin-bottom:14px}
+    .page-header p{color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem}
+
+    /* projects grid */
+    .projects-wrap{max-width:900px;margin:0 auto;padding:0 64px}
+    .projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+    .project-card{
+      background:var(--surf);border:1px solid var(--border);
+      padding:28px;text-decoration:none;
+      display:flex;flex-direction:column;gap:12px;
+      transition:border-color .2s,background .2s;
+      position:relative;overflow:hidden;
+    }
+    .project-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;
+      height:2px;background:var(--cr);
+      transform:scaleX(0);transform-origin:left;
+      transition:transform .3s;
+    }
+    .project-card:hover{border-color:var(--border);background:var(--surf2)}
+    .project-card:hover::before{transform:scaleX(1)}
+
+    .proj-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+    .proj-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--text);line-height:1.2}
+    .proj-arrow{color:var(--cr);font-size:.9rem;opacity:0;transition:opacity .2s,transform .2s;flex-shrink:0;margin-top:2px}
+    .project-card:hover .proj-arrow{opacity:1;transform:translate(2px,-2px)}
+
+    .proj-desc{font-size:.82rem;color:var(--muted);line-height:1.7;flex:1}
+
+    .proj-footer{display:flex;align-items:center;gap:10px;margin-top:4px}
+    .lang-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .lang-label{font-size:.7rem;color:var(--muted);letter-spacing:.06em}
+
+    .proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .proj-tag{font-size:.66rem;color:var(--muted);border:1px solid var(--border);padding:2px 9px;letter-spacing:.04em}
+    .proj-bullets{margin-top:10px;margin-left:14px;flex:1}
+    .proj-bullets li{font-size:.8rem;color:var(--muted);line-height:1.75;margin-bottom:3px}
+    .proj-bullets li::marker{color:var(--cr)}
+
+    /* card is now a div â links live at the bottom */
+    .project-card{text-decoration:none;cursor:default}
+
+    .proj-links{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center}
+    .proj-link{
+      display:inline-flex;align-items:center;gap:6px;
+      font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+      text-decoration:none;padding:7px 16px;transition:all .2s;
+    }
+    .proj-link-gh{color:var(--muted);border:1px solid var(--border)}
+    .proj-link-gh:hover{color:var(--text);border-color:var(--muted)}
+    .proj-link-demo{background:var(--cr);color:#f5e0e5}
+    .proj-link-demo:hover{background:var(--cr-hi)}
+
+    .live-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--green);margin-left:auto;
+    }
+    .live-dot{
+      width:6px;height:6px;border-radius:50%;background:var(--green);
+      animation:pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+    .load-msg,.err-msg{font-size:.85rem;color:var(--muted);padding:32px 0;font-style:italic;font-family:'Cormorant Garamond',serif}
+
+    /* divider */
+    .seal-divider{display:flex;align-items:center;gap:18px;max-width:900px;margin:72px auto;padding:0 64px}
+    .seal-divider::before,.seal-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+    .seal-divider svg{width:26px;height:30px;color:var(--cr);opacity:.6;flex-shrink:0}
+
+    footer{border-top:1px solid var(--border);padding:24px 64px;display:flex;justify-content:space-between;align-items:center}
+    footer p{font-size:.7rem;color:var(--faint);letter-spacing:.06em}
+
+    @media(max-width:700px){
+      nav{padding:20px 24px}
+      .page-header{padding:60px 24px 40px}
+      .magic-circle-sm{display:none}
+      .experience{padding:0 24px}
+      .projects-wrap{padding:0 24px}
+      .projects-grid{grid-template-columns:1fr}
+      .seal-divider{padding:0 24px}
+      footer{padding:24px;flex-direction:column;gap:8px}
+    }
+
+    /* ââ VN ATMOSPHERE ââ */
+    .vn-overlay{
+      position:fixed;inset:0;pointer-events:none;z-index:10;
+      background:
+        radial-gradient(ellipse at 50% 35%,transparent 30%,rgba(12,7,9,.52) 100%),
+        repeating-linear-gradient(to bottom,transparent,transparent 3px,rgba(0,0,0,.028) 3px,rgba(0,0,0,.028) 4px);
+    }
+    .vn-scene{
+      display:block;
+      font-family:'Cormorant Garamond',serif;font-style:italic;
+      font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;
+      color:var(--cr);opacity:.55;margin-bottom:16px;
+    }
+    /* corner ornament on project cards (bottom-right) */
+    .project-card::after{
+      content:'';position:absolute;bottom:-1px;right:-1px;
+      width:11px;height:11px;
+      border-bottom:2px solid rgba(200,16,46,.55);
+      border-right:2px solid rgba(200,16,46,.55);
+      transition:border-color .2s;
+    }
+    .project-card:hover::after{border-color:var(--cr)}
+  </style>
+</head>
+<body>
+<div class="vn-overlay"></div>
+
+<nav>
+  <a href="index.html" class="nav-name">Naisha Sarna</a>
+  <div class="nav-links">
+    <a href="index.html">About</a>
+    <a href="projects.html" class="active">Projects</a>
+    <a href="trading.html">Trading</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <svg class="magic-circle-sm" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="250" cy="250" r="240" stroke="#c8102e" stroke-width="1.2"/>
+    <circle cx="250" cy="250" r="200" stroke="#c8102e" stroke-width=".6"/>
+    <circle cx="250" cy="250" r="155" stroke="#c8102e" stroke-width=".8"/>
+    <circle cx="250" cy="250" r="100" stroke="#c8102e" stroke-width=".6"/>
+    <polygon points="250,30 462,135 462,365 250,470 38,365 38,135" stroke="#c8102e" stroke-width=".7" fill="none"/>
+    <line x1="250" y1="10" x2="250" y2="490" stroke="#c8102e" stroke-width=".4"/>
+    <line x1="10" y1="250" x2="490" y2="250" stroke="#c8102e" stroke-width=".4"/>
+    <line x1="74" y1="74" x2="426" y2="426" stroke="#c8102e" stroke-width=".4"/>
+    <line x1="426" y1="74" x2="74" y2="426" stroke="#c8102e" stroke-width=".4"/>
+  </svg>
+
+  <span class="vn-scene">â Record of Works â</span>
   <h1>Projects.</h1>
 </div>
 
@@ -218,7 +474,7 @@
       </div>
       <div class="proj-links">
         <a class="proj-link proj-link-gh" href="https://github.com/naibai101/trading-news" target="_blank" rel="noopener">â¥ GitHub</a>
-        <a class="proj-link proj-link-demo" href="https://trading-news-ns9k.onrender.com/" target="_blank" rel="noopener">â Live Demo</a>
+        <a class="proj-link proj-link-demo" href="https://trading-news-ns9k.onrender.com/" target="_blank" rel="noopener">â· Live Demo</a>
         <span class="live-badge"><span class="live-dot"></span>live</span>
       </div>
     </div>

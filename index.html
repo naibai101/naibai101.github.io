@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    /* ââ Tohsaka palette ââ */
+    /* ── Tohsaka palette ── */
     :root {
       --bg:      #0c0709;
       --surf:    #130a0e;
@@ -35,7 +35,7 @@
       overflow-x:hidden;
     }
 
-    /* ââ NAV ââ */
+    /* ── NAV ── */
     nav{
       display:flex;justify-content:space-between;align-items:center;
       padding:26px 64px;
@@ -58,7 +58,7 @@
     .nav-links a:hover{color:var(--text)}
     .nav-links a.active{color:var(--cr)}
 
-    /* ââ HERO ââ */
+    /* ── HERO ── */
     .hero-wrap{
       position:relative;
       overflow:hidden;
@@ -125,7 +125,7 @@
     }
     .btn-outline:hover{border-color:var(--muted);color:var(--text)}
 
-    /* ââ DIVIDER ââ */
+    /* ── DIVIDER ── */
     .seal-divider{
       display:flex;align-items:center;gap:18px;
       max-width:900px;margin:44px auto;padding:0 64px;
@@ -135,7 +135,7 @@
     }
     .seal-divider svg{width:28px;height:28px;color:var(--cr);opacity:.6;flex-shrink:0}
 
-    /* ââ ABOUT ââ */
+    /* ── ABOUT ── */
     .about{
       max-width:900px;margin:0 auto;padding:0 64px;
       display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:start;
@@ -170,7 +170,7 @@
     .edu-chip span{font-size:.78rem;color:var(--muted);line-height:1.4}
     .edu-chip strong{color:var(--text);font-weight:500}
 
-    /* ââ SKILLS ââ */
+    /* ── SKILLS ── */
     .skills{padding-top:4px}
     .skill-group{margin-bottom:16px}
     .skill-group:last-child{margin-bottom:0}
@@ -187,7 +187,7 @@
     .skill-tag:hover{border-color:var(--cr);color:var(--text)}
     .skill-tag.gold{border-color:rgba(74,184,212,.35);color:var(--gold)}
 
-    /* ââ CONNECT ââ */
+    /* ── CONNECT ── */
     .connect{
       max-width:900px;margin:80px auto 100px;padding:0 64px;
     }
@@ -205,7 +205,7 @@
     .connect-links a::before{content:'\2022';font-size:.44rem;color:var(--cr)}
     .connect-links a:hover{color:var(--text)}
 
-    /* ââ FOOTER ââ */
+    /* ── FOOTER ── */
     footer{
       border-top:1px solid var(--border);
       padding:24px 64px;
@@ -226,7 +226,7 @@
       footer{padding:24px;flex-direction:column;gap:8px;text-align:center}
     }
 
-    /* ââ VN ATMOSPHERE ââ */
+    /* ── VN ATMOSPHERE ── */
     .vn-overlay{
       position:fixed;inset:0;pointer-events:none;z-index:10;
       background:
@@ -277,7 +277,7 @@
 <body>
 <div class="vn-overlay"></div>
 
-<!-- ââ NAV ââ -->
+<!-- ── NAV ── -->
 <nav>
   <a href="index.html" class="nav-name">Naisha Sarna</a>
   <div class="nav-links">
@@ -287,7 +287,7 @@
   </div>
 </nav>
 
-<!-- ââ HERO ââ -->
+<!-- ── HERO ── -->
 <div class="hero-wrap">
 
   <!-- rotating magical circle -->
@@ -314,7 +314,7 @@
     <polygon points="250,464 255,470 250,476 245,470" fill="#c8102e"/>
   </svg>
 
-  <!-- command seal (large, faint) â Rin Tohsaka: spike + outer ring + inner ring -->
+  <!-- command seal (large, faint) — Rin Tohsaka: spike + outer ring + inner ring -->
   <svg class="seal-hero" viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg">
     <!-- spike -->
     <path d="M100,8 C104,26 108,60 108,88 L100,94 L92,88 C92,60 96,26 100,8Z" fill="currentColor"/>
@@ -324,7 +324,7 @@
     <path d="M107,117 A38,38 0 1,1 93,117" stroke="currentColor" stroke-width="8" fill="none" stroke-linecap="round"/>
   </svg>
 
-  <span class="vn-scene">â Scene I: Introduction â</span>
+  <span class="vn-scene">— Scene I: Introduction —</span>
   <h1>Naisha Sarna.</h1>
   <div class="hero-actions">
     <a href="trading.html" class="btn btn-primary">Trading</a>
@@ -332,7 +332,7 @@
   </div>
 </div>
 
-<!-- ââ DIVIDER ââ -->
+<!-- ── DIVIDER ── -->
 <div class="seal-divider">
   <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M20,1.6 C20.8,5.2 21.6,12 21.6,17.6 L20,18.8 L18.4,17.6 C18.4,12 19.2,5.2 20,1.6Z" fill="currentColor"/>
@@ -341,21 +341,21 @@
   </svg>
 </div>
 
-<!-- ââ ABOUT ââ -->
+<!-- ── ABOUT ── -->
 <div class="about">
   <div class="about-text">
     <span class="sec-label">About</span>
 
     <div class="edu-chip">
       <div class="mark"></div>
-      <span><strong>Purdue University</strong> Â· B.S. Applied Mathematics, Minor in Finance Â· 2024â2028</span>
+      <span><strong>Purdue University</strong> · B.S. Applied Mathematics, Minor in Finance · 2024–2028</span>
     </div>
 
     <span class="vn-name">Naisha</span>
     <div class="vn-box">
       <p>Hi, I'm an applied math student at Purdue with a minor in finance. I have an interest in fintech, with a high focus on trading roles.</p>
       <p>I have a background in swing trading and am working on building my portfolio. Outside of school I love playing video games (Honkai: Star Rail and Balatro right now!), drawing, reading, and playing ping pong.</p>
-      <p>Looking for quant / trading / software internships for Summer 2027.<span class="vn-cursor">â¼</span></p>
+      <p>Looking for quant / trading / software internships for Summer 2027.<span class="vn-cursor">▼</span></p>
     </div>
   </div>
 

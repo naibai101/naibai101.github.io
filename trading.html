@@ -147,9 +147,42 @@
       .seal-divider{padding:0 24px}
       footer{padding:24px;flex-direction:column;gap:8px}
     }
+
+    /* ââ VN ATMOSPHERE ââ */
+    .vn-overlay{
+      position:fixed;inset:0;pointer-events:none;z-index:10;
+      background:
+        radial-gradient(ellipse at 50% 35%,transparent 30%,rgba(12,7,9,.52) 100%),
+        repeating-linear-gradient(to bottom,transparent,transparent 3px,rgba(0,0,0,.028) 3px,rgba(0,0,0,.028) 4px);
+    }
+    .vn-scene{
+      display:block;
+      font-family:'Cormorant Garamond',serif;font-style:italic;
+      font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;
+      color:var(--cr);opacity:.55;margin-bottom:16px;
+    }
+    /* stats grid corner accents */
+    .stats-wrap{position:relative}
+    .stats-wrap::before{
+      content:'';position:absolute;
+      top:0;left:64px;
+      width:14px;height:14px;
+      border-top:1.5px solid rgba(200,16,46,.45);border-left:1.5px solid rgba(200,16,46,.45);
+    }
+    .stats-wrap::after{
+      content:'';position:absolute;
+      bottom:0;right:64px;
+      width:14px;height:14px;
+      border-bottom:1.5px solid rgba(200,16,46,.45);border-right:1.5px solid rgba(200,16,46,.45);
+    }
+    @media(max-width:720px){
+      .stats-wrap::before{left:24px}
+      .stats-wrap::after{right:24px}
+    }
   </style>
 </head>
 <body>
+<div class="vn-overlay"></div>
 
 <nav>
   <a href="index.html" class="nav-name">Naisha Sarna</a>
@@ -173,6 +206,7 @@
     <line x1="426" y1="74" x2="74" y2="426" stroke="#c8102e" stroke-width=".4"/>
   </svg>
 
+  <span class="vn-scene">â Battle Records â</span>
   <h1>Trading.</h1>
 </div>
 
@@ -298,7 +332,7 @@
         else{cur+=c}
       }
       vals.push(cur.trim());
-      return Object.fromEntries hdrs.map((h,i)=>[h,(vals[i]||'').replace(/^"|"$/g,'')]));
+      return Object.fromEntries(hdrs.map((h,i)=>[h,(vals[i]||'').replace(/^"|"$/g,'')]));
     });
   }
 
@@ -384,36 +418,4 @@
     if(typeof TradingView!=='undefined'){
       new TradingView.widget({
         container_id:'tv-chart-container',symbol:ticker,interval:'D',
-        timezone:'America/New_York',theme:'dark',style:'1',locale:'en',
-        toolbar_bg:'#130a0e',enable_publishing:false,hide_top_toolbar:false,
-        save_image:false,height:420,width:'100%',
-        backgroundColor:'#0c0709',gridColor:'rgba(48,21,30,0.5)',
-      });
-    }
-  }
-  document.getElementById('modal-close').onclick=()=>{
-    document.getElementById('chart-modal').classList.remove('open');
-  };
-  document.getElementById('chart-modal').onclick=e=>{
-    if(e.target===document.getElementById('chart-modal'))
-      document.getElementById('chart-modal').classList.remove('open');
-  };
-
-  // ââ Load âââââââââââââââââââââââââââââââââââââââââââââââââââ
-  (async()=>{
-    const sw=document.getElementById('setup-wrap');
-    if(!SHEET_CSV_URL){sw.style.display='block';return;}
-    sw.style.display='none';
-    try{
-      const r=await fetch(SHEET_CSV_URL);
-      const txt=await r.text();
-      const trades=parseCSV(txt);
-      renderStats(trades);
-      renderTable(trades);
-    }catch(e){
-      document.getElementById('trade-tbody').innerHTML='<tr><td colspan="11" class="tbl-empty">could not load sheet â check URL or CORS settings</td></tr>';
-    }
-  })();
-</script>
-</body>
-                      </html>
+        timezone:'America/New_York',the

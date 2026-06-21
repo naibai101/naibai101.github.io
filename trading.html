@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Trading â Naisha Sarna</title>
+  <title>Trading — Naisha Sarna</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -148,7 +148,7 @@
       footer{padding:24px;flex-direction:column;gap:8px}
     }
 
-    /* ââ VN ATMOSPHERE ââ */
+    /* ── VN ATMOSPHERE ── */
     .vn-overlay{
       position:fixed;inset:0;pointer-events:none;z-index:10;
       background:
@@ -206,7 +206,7 @@
     <line x1="426" y1="74" x2="74" y2="426" stroke="#c8102e" stroke-width=".4"/>
   </svg>
 
-  <span class="vn-scene">â Battle Records â</span>
+  <span class="vn-scene">— Battle Records —</span>
   <h1>Trading.</h1>
 </div>
 
@@ -215,13 +215,13 @@
   <div class="setup-box">
     <h3>Connect your Google Sheet to load trades</h3>
     <ol>
-      <li>Create a Google Sheet â row 1 headers:</li>
+      <li>Create a Google Sheet — row 1 headers:</li>
     </ol>
     <div class="col-list">Ticker | Side | Entry Date | Exit Date | Entry $ | Exit $ | Shares | P&amp;L $ | P&amp;L % | Result | Notes</div>
     <ol start="2">
       <li>File &rarr; Share &rarr; <code>Publish to web</code> &rarr; Sheet1 &rarr; <code>CSV</code> &rarr; Publish &rarr; Copy URL</li>
       <li>Open <code>trading.html</code>, find <code>SHEET_CSV_URL = ''</code>, paste URL inside the quotes</li>
-      <li>Save and upload to GitHub â stats compute automatically from then on</li>
+      <li>Save and upload to GitHub — stats compute automatically from then on</li>
     </ol>
   </div>
 </div>
@@ -230,27 +230,27 @@
 <div class="stats-wrap">
   <div class="stats-grid">
     <div class="stat-cell">
-      <div class="stat-val neu" id="s-trades">â</div>
+      <div class="stat-val neu" id="s-trades">—</div>
       <div class="stat-lbl">Total Trades</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-val gld" id="s-wr">â</div>
+      <div class="stat-val gld" id="s-wr">—</div>
       <div class="stat-lbl">Win Rate</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-val" id="s-pnl">â</div>
+      <div class="stat-val" id="s-pnl">—</div>
       <div class="stat-lbl">Total P&amp;L</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-val neu" id="s-rr">â</div>
+      <div class="stat-val neu" id="s-rr">—</div>
       <div class="stat-lbl">Avg Win / Avg Loss</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-val pos" id="s-best">â</div>
+      <div class="stat-val pos" id="s-best">—</div>
       <div class="stat-lbl">Best Trade</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-val neg" id="s-worst">â</div>
+      <div class="stat-val neg" id="s-worst">—</div>
       <div class="stat-lbl">Worst Trade</div>
     </div>
   </div>
@@ -285,12 +285,12 @@
   <div class="chart-box">
     <div class="chart-head">
       <div class="chart-head-left">
-        <span class="chart-ticker-name" id="modal-ticker">â</span>
-        <span class="chart-meta" id="modal-meta">â</span>
+        <span class="chart-ticker-name" id="modal-ticker">—</span>
+        <span class="chart-meta" id="modal-meta">—</span>
       </div>
       <div style="display:flex;align-items:center;gap:20px">
-        <span class="chart-pnl" id="modal-pnl">â</span>
-        <button class="chart-close" id="modal-close">â</button>
+        <span class="chart-pnl" id="modal-pnl">—</span>
+        <button class="chart-close" id="modal-close">✕</button>
       </div>
     </div>
     <div class="chart-body">
@@ -314,12 +314,12 @@
 
 <script src="https://s3.tradingview.com/tv.js"></script>
 <script>
-  // âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-  //  GOOGLE SHEET SETUP â paste your published CSV URL here:
-  // âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ═══════════════════════════════════════════════════════════
+  //  GOOGLE SHEET SETUP — paste your published CSV URL here:
+  // ═══════════════════════════════════════════════════════════
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQAvqnfeLS1AskIhWJ6_i7x2un25ZxVsbWd2TDNxheBfMNnIhz-TGhVwzQMqmXGHp5igi7u77_GBraW/pub?output=csv';
 
-  // ââ CSV parser âââââââââââââââââââââââââââââââââââââââââââ
+  // ── CSV parser ───────────────────────────────────────────
   function parseCSV(txt) {
     const lines = txt.trim().split('\n');
     if (lines.length < 2) return [];
@@ -338,16 +338,16 @@
 
   const fmt$ = v => {
     const n=parseFloat(v);
-    if(isNaN(n)) return v||'â';
+    if(isNaN(n)) return v||'—';
     return(n>=0?'+$':'-$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   };
   const fmtPct = v => {
     const n=parseFloat(v);
-    if(isNaN(n)) return v||'â';
+    if(isNaN(n)) return v||'—';
     return(n>=0?'+':'')+n.toFixed(2)+'%';
   };
 
-  // ââ Stats ââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Stats ────────────────────────────────────────────────
   function renderStats(trades){
     const pnls=trades.map(t=>parseFloat(t['P&L $'])).filter(n=>!isNaN(n));
     const wins=trades.filter(t=>(t['Result']||'').toLowerCase().includes('win'));
@@ -358,24 +358,24 @@
     const worst=pnls.length?Math.min(...pnls):null;
     const avgW=wins.length?wins.reduce((a,t)=>a+parseFloat(t['P&L $']||0),0)/wins.length:null;
     const avgL=losses.length?Math.abs(losses.reduce((a,t)=>a+parseFloat(t['P&L $']||0),0)/losses.length):null;
-    const rr=avgW&&avgL?(avgW/avgL).toFixed(2)+'x':'â';
-    document.getElementById('s-trades').textContent=trades.length||'â';
-    document.getElementById('s-wr').textContent=trades.length?wr+'%':'â';
+    const rr=avgW&&avgL?(avgW/avgL).toFixed(2)+'x':'—';
+    document.getElementById('s-trades').textContent=trades.length||'—';
+    document.getElementById('s-wr').textContent=trades.length?wr+'%':'—';
     const pe=document.getElementById('s-pnl');
-    pe.textContent=pnls.length?fmt$(total):'â';
+    pe.textContent=pnls.length?fmt$(total):'—';
     pe.className='stat-val '+(total>=0?'pos':'neg');
     document.getElementById('s-rr').textContent=rr;
-    document.getElementById('s-best').textContent=best!==null?fmt$(best):'â';
-    document.getElementById('s-worst').textContent=worst!==null?fmt$(worst):'â';
+    document.getElementById('s-best').textContent=best!==null?fmt$(best):'—';
+    document.getElementById('s-worst').textContent=worst!==null?fmt$(worst):'—';
   }
 
-  // ââ Table ââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Table ──────────────────────────────────────────────
   function renderTable(trades){
     const ct=document.getElementById('trade-ct');
     ct.textContent=trades.length+' trade'+(trades.length!==1?'s':'');
     const tbody=document.getElementById('trade-tbody');
     if(!trades.length){
-      tbody.innerHTML='<tr><td colspan="11" class="tbl-empty">no trades yet â connect your sheet above</td></tr>';
+      tbody.innerHTML='<tr><td colspan="11" class="tbl-empty">no trades yet — connect your sheet above</td></tr>';
       return;
     }
     tbody.innerHTML=trades.map(t=>{
@@ -389,22 +389,22 @@
       const resBadge=res.includes('win')?'b-win':res.includes('loss')?'b-loss':'';
       const tk=t['Ticker']||'';
       return `<tr class="ticker-row">
-        <td><span class="ticker" onclick="openChart('${tk}','${t['Entry Date']||''}','${t['Exit Date']||''}','${t['P&L $']||''}','${t['P&L %']||''}')">${tk||'â'}</span></td>
-        <td><span class="badge ${sideBadge}">${t['Side']||'â'}</span></td>
-        <td class="td-mu">${t['Entry Date']||'â'}</td>
-        <td class="td-mu">${t['Exit Date']||'â'}</td>
-        <td class="td-mu">${t['Entry $']?'$'+parseFloat(t['Entry $']).toFixed(2):'â'}</td>
-        <td class="td-mu">${t['Exit $']?'$'+parseFloat(t['Exit $']).toFixed(2):'â'}</td>
-        <td class="td-mu">${t['Shares']||'â'}</td>
-        <td class="${pnlCls}">${isNaN(pnl)?t['P&L $']||'â':fmt$(pnl)}</td>
-        <td class="${pctCls}">${isNaN(pct)?t['P&L %']||'â':fmtPct(pct)}</td>
-        <td><span class="badge ${resBadge}">${t['Result']||'â'}</span></td>
+        <td><span class="ticker" onclick="openChart('${tk}','${t['Entry Date']||''}','${t['Exit Date']||''}','${t['P&L $']||''}','${t['P&L %']||''}')">${tk||'—'}</span></td>
+        <td><span class="badge ${sideBadge}">${t['Side']||'—'}</span></td>
+        <td class="td-mu">${t['Entry Date']||'—'}</td>
+        <td class="td-mu">${t['Exit Date']||'—'}</td>
+        <td class="td-mu">${t['Entry $']?'$'+parseFloat(t['Entry $']).toFixed(2):'—'}</td>
+        <td class="td-mu">${t['Exit $']?'$'+parseFloat(t['Exit $']).toFixed(2):'—'}</td>
+        <td class="td-mu">${t['Shares']||'—'}</td>
+        <td class="${pnlCls}">${isNaN(pnl)?t['P&L $']||'—':fmt$(pnl)}</td>
+        <td class="${pctCls}">${isNaN(pct)?t['P&L %']||'—':fmtPct(pct)}</td>
+        <td><span class="badge ${resBadge}">${t['Result']||'—'}</span></td>
         <td class="td-note">${t['Notes']||''}</td>
       </tr>`;
     }).join('');
   }
 
-  // ââ Chart modal ââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Chart modal ────────────────────────────────────────────
   function openChart(ticker,entryDate,exitDate,pnlD,pnlP){
     if(!ticker)return;
     document.getElementById('modal-ticker').textContent=ticker;
@@ -412,7 +412,7 @@
     const pnlEl=document.getElementById('modal-pnl');
     pnlEl.textContent=(isNaN(pnl)?pnlD:fmt$(pnl))+(pnlP?' / '+fmtPct(parseFloat(pnlP)):'');
     pnlEl.className='chart-pnl '+(isNaN(pnl)?'neu':pnl>=0?'td-pos':'td-neg');
-    document.getElementById('modal-meta').textContent=entryDate+(exitDate?' â '+exitDate:'');
+    document.getElementById('modal-meta').textContent=entryDate+(exitDate?' → '+exitDate:'');
     document.getElementById('chart-modal').classList.add('open');
     document.getElementById('tv-chart-container').innerHTML='';
     if(typeof TradingView!=='undefined'){

@@ -10,7 +10,7 @@
   <style>
     :root{
       --bg:#0c0709;--surf:#130a0e;--surf2:#1c1016;--border:#30151e;
-      --cr:#c8102e;--cr-hi:#e8283e;--gold:#d4a94a;
+      --cr:#c8102e;--cr-hi:#e8283e;--gold:#4ab8d4;
       --text:#f0dce2;--muted:#7a5862;--faint:#3d1822;
       --green:#4a9e6b;--loss:#c05050;
     }
@@ -112,7 +112,7 @@
       width:min(900px,95vw);max-height:90vh;overflow:hidden;
       display:flex;flex-direction:column;
     }
-    .chart-heÉd{
+    .chart-head{
       display:flex;justify-content:space-between;align-items:center;
       padding:18px 24px;border-bottom:1px solid var(--border);flex-shrink:0;
     }
@@ -173,23 +173,21 @@
     <line x1="426" y1="74" x2="74" y2="426" stroke="#c8102e" stroke-width=".4"/>
   </svg>
 
-  <span class="sec-label">Portfolio</span>
   <h1>Trading.</h1>
-  <p>A transparent log of my swing trades â every entry, every exit.</p>
 </div>
 
 <!-- SETUP (hidden when SHEET_CSV_URL is set) -->
 <div class="setup-wrap" id="setup-wrap">
   <div class="setup-box">
-    <h3>â Connect your Google Sheet to load trades</h3>
+    <h3>Connect your Google Sheet to load trades</h3>
     <ol>
       <li>Create a Google Sheet â row 1 headers:</li>
     </ol>
     <div class="col-list">Ticker | Side | Entry Date | Exit Date | Entry $ | Exit $ | Shares | P&amp;L $ | P&amp;L % | Result | Notes</div>
     <ol start="2">
-      <li>File â Share â <code>Publish to web</code> â Sheet1 â <code>CSV</code> â Publish â Copy URL</li>
+      <li>File &rarr; Share &rarr; <code>Publish to web</code> &rarr; Sheet1 &rarr; <code>CSV</code> &rarr; Publish &rarr; Copy URL</li>
       <li>Open <code>trading.html</code>, find <code>SHEET_CSV_URL = ''</code>, paste URL inside the quotes</li>
-      <li>Save and upload to GitHub â stats compute automatically from then on â¦</li>
+      <li>Save and upload to GitHub â stats compute automatically from then on</li>
     </ol>
   </div>
 </div>
@@ -242,7 +240,7 @@
         </tr>
       </thead>
       <tbody id="trade-tbody">
-        <tr><td colspan="11" class="tbl-empty">connect your google sheet above to summon your trades â¦</td></tr>
+        <tr><td colspan="11" class="tbl-empty">connect your google sheet above to summon your trades</td></tr>
       </tbody>
     </table>
   </div>
@@ -268,15 +266,15 @@
 </div>
 
 <div class="seal-divider">
-  <svg viewBox="0 0 40 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20,1.5 C20.06,4.4 20.36,10 20.42,15.6 L20,18 L19.58,15.6 C19.64,10 19.94,4.4 20,1.5Z" fill="currentColor"/>
-    <path d="M20.7,19.2 A11.4,11.4 0 1,1 19.3,19.2" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-    <path d="M20.7,19.2 A9.2,9.2 0 0,0 20.65,21.4" stroke="currentColor" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+  <svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20,1.6 C20.8,5.2 21.6,12 21.6,17.6 L20,18.8 L18.4,17.6 C18.4,12 19.2,5.2 20,1.6Z" fill="currentColor"/>
+    <path d="M21.6,18.8 A12,12 0 1,1 18.4,18.8" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M21.4,23.4 A7.6,7.6 0 1,1 18.6,23.4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
   </svg>
 </div>
 
 <footer>
-  <p>Naisha Sarna &nbsp;â&nbsp; naibai101.github.io</p>
+  <p>Naisha Sarna &nbsp;&bull;&nbsp; naibai101.github.io</p>
   <p>all trades are real.</p>
 </footer>
 
@@ -300,14 +298,14 @@
         else{cur+=c}
       }
       vals.push(cur.trim());
-      return Object.fromEntries(hdrs.map((h,i)=>[h,(vals[i]||'').replace(/^"|"$/g,'')]));
+      return Object.fromEntries hdrs.map((h,i)=>[h,(vals[i]||'').replace(/^"|"$/g,'')]));
     });
   }
 
   const fmt$ = v => {
     const n=parseFloat(v);
     if(isNaN(n)) return v||'â';
-    return(n>=0?'+$':'-$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:(2)});
+    return(n>=0?'+$':'-$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   };
   const fmtPct = v => {
     const n=parseFloat(v);
@@ -337,100 +335,85 @@
     document.getElementById('s-worst').textContent=worst!==null?fmt$(worst):'â';
   }
 
-  // ââ Table âââââââââââââââââââââââââââââââââââââââââââ
+  // ââ Table ââââââââââââââââââââââââââââââââââââââââââââââ
   function renderTable(trades){
-    const tbody=document.getElementById('trade-tbody');
     const ct=document.getElementById('trade-ct');
+    ct.textContent=trades.length+' trade'+(trades.length!==1?'s':'');
+    const tbody=document.getElementById('trade-tbody');
     if(!trades.length){
-      tbody.innerHTML=`<tr><td colspan="11" class="tbl-empty">no trades yet</td></tr>`;
-      ct.textContent='';
+      tbody.innerHTML='<tr><td colspan="11" class="tbl-empty">no trades yet â connect your sheet above</td></tr>';
       return;
     }
-    ct.textContent=`${trades.length} trade${trades.length===1?'':'s'}`;
     tbody.innerHTML=trades.map(t=>{
-      const pnl=parseFloat(t['P&L $'])||0;
+      const pnl=parseFloat(t['P&L $']);
+      const pct=parseFloat(t['P&L %']);
       const res=(t['Result']||'').toLowerCase();
-      const isWin=res.includes('win');
-      const isLoss=res.includes('includes');
-      const side=(t['Side']||'').toLowerCase()==='short'?'short':'°ong';
+      const side=(t['Side']||'').toLowerCase();
+      const pnlCls=isNaN(pnl)?'td-mu':pnl>=0?'td-pos':'td-neg';
+      const pctCls=isNaN(pct)?'td-mu':pct>=0?'td-pos':'td-neg';
+      const sideBadge=side.includes('long')?'b-long':side.includes('short')?'b-short':'';
+      const resBadge=res.includes('win')?'b-win':res.includes('loss')?'b-loss':'';
+      const tk=t['Ticker']||'';
       return `<tr class="ticker-row">
-        <td><span class="ticker" data-ticker="${t.Ticker}">${t.Ticker}</span></td>
-        <td><span class="badge b-${side}">${side}</span></td>
-        <td class="td-mu">${t['Entry Date']}</td>
-        <td class="td-mu">${t['Exit Date']}</td>
-        <td class="td-mu">$${t['Entry $'] - t['Entry $'].match(/\./)?}${t['Entry $']}</td>
-        <td class="td-mu">$${t['Exit $'] - t['Exit $'].match(/\./)?}>${t['Exit $']}</td>
-        <td class="td-mu">${t.Shares}</td>
-        <td class="pnl>${pnl>=0?'td-pos':'td-neg'}">${fmt$(t['P&L $'])}</td>
-        <td class="${pnl>=0?'td-pos':'td-neg'}">${fmtPct(t['P&L %'])}</td>
-        <td><span class="badge b-${res.includes('win')?'win':res.includes('loss')?'loss':'wash'}">${t['Result']}</span></td>
-        <td class="td-note">${t.Notes||''}</td>
+        <td><span class="ticker" onclick="openChart('${tk}','${t['Entry Date']||''}','${t['Exit Date']||''}','${t['P&L $']||''}','${t['P&L %']||''}')">${tk||'â'}</span></td>
+        <td><span class="badge ${sideBadge}">${t['Side']||'â'}</span></td>
+        <td class="td-mu">${t['Entry Date']||'â'}</td>
+        <td class="td-mu">${t['Exit Date']||'â'}</td>
+        <td class="td-mu">${t['Entry $']?'$'+parseFloat(t['Entry $']).toFixed(2):'â'}</td>
+        <td class="td-mu">${t['Exit $']?'$'+parseFloat(t['Exit $']).toFixed(2):'â'}</td>
+        <td class="td-mu">${t['Shares']||'â'}</td>
+        <td class="${pnlCls}">${isNaN(pnl)?t['P&L $']||'â':fmt$(pnl)}</td>
+        <td class="${pctCls}">${isNaN(pct)?t['P&L %']||'â':fmtPct(pct)}</td>
+        <td><span class="badge ${resBadge}">${t['Result']||'â'}</span></td>
+        <td class="td-note">${t['Notes']||''}</td>
       </tr>`;
     }).join('');
-    // Attach ticker click listeners
-    tbody.querySelectorAll('.ticker').forEach(el=>{
-      el.addEventListener('click',()=>openChart(el.dataset.ticker, t));
-    });
   }
 
-  // ââ Chart modal ââââââââââââââââââââââââââââââââââââââââââ
-  let tvChart=null;
-  function openChart(ticker,trade){
+  // ââ Chart modal ââââââââââââââââââââââââââââââââââââââââââââ
+  function openChart(ticker,entryDate,exitDate,pnlD,pnlP){
+    if(!ticker)return;
     document.getElementById('modal-ticker').textContent=ticker;
-    const meta=[];
-    if(trade['Entry Date']) meta.push(`Entry ${trade['Entry Date']}`);
-    if(trade['Exit Date']) meta.push(`Exit ${trade['Exit Date']}`);
-    document.getElementById('modal-meta').textContent=meta.join('  â¢ ');
-    const pnlV=parseFloat(trade['P&L $'])||0;
-    const pel =document.getElementById('modal-pnl');
-    pel.textContent=fmt$(pnlV);
-    pel.className='chart-pnl '+(pnlV>=0?'pos':'neg');
+    const pnl=parseFloat(pnlD);
+    const pnlEl=document.getElementById('modal-pnl');
+    pnlEl.textContent=(isNaN(pnl)?pnlD:fmt$(pnl))+(pnlP?' / '+fmtPct(parseFloat(pnlP)):'');
+    pnlEl.className='chart-pnl '+(isNaN(pnl)?'neu':pnl>=0?'td-pos':'td-neg');
+    document.getElementById('modal-meta').textContent=entryDate+(exitDate?' â '+exitDate:'');
     document.getElementById('chart-modal').classList.add('open');
-    document.body.style.overflow='hidden';
-    const container=document.getElementById('tv-chart-container');
-    container.innerHTML='';
-    tvChart=new Twidget({
-      symbol: ticker,
-      width: '100%',
-      height: 420,
-      locale: 'en',
-      dateRange: '3m',
-      containerId: 'tv-chart-container',
-      autosize: false,
-      colorTheme: 'dark',
-      backgroundColor: '#130a0e',
-      gridLineColor: '#30151e',
-    });
+    document.getElementById('tv-chart-container').innerHTML='';
+    if(typeof TradingView!=='undefined'){
+      new TradingView.widget({
+        container_id:'tv-chart-container',symbol:ticker,interval:'D',
+        timezone:'America/New_York',theme:'dark',style:'1',locale:'en',
+        toolbar_bg:'#130a0e',enable_publishing:false,hide_top_toolbar:false,
+        save_image:false,height:420,width:'100%',
+        backgroundColor:'#0c0709',gridColor:'rgba(48,21,30,0.5)',
+      });
+    }
   }
-
-  document.getElementById('modal-close').addEventListener('click',()=>{
+  document.getElementById('modal-close').onclick=()=>{
     document.getElementById('chart-modal').classList.remove('open');
-    document.body.style.overflow='';
-    tvChart?.remove();
-  });
-  document.getElementById('chart-modal').addEventListener('click',e=>{
-    if(e.target===e.currentTarget){
-      document.getElementById('modal-close').click();
-    }
-  });
+  };
+  document.getElementById('chart-modal').onclick=e=>{
+    if(e.target===document.getElementById('chart-modal'))
+      document.getElementById('chart-modal').classList.remove('open');
+  };
 
-  // ââ Init ââââââââââââââââââââââââââââââââââââââââââââââââ
-  async function init(){
-    if(!SHEET_CSV_URL || SHEET_CSV_URL.trim()===''){
-      return;
-    }
-    document.getElementById('setup-wrap').style.display='none';
+  // ââ Load âââââââââââââââââââââââââââââââââââââââââââââââââââ
+  (async()=>{
+    const sw=document.getElementById('setup-wrap');
+    if(!SHEET_CSV_URL){sw.style.display='block';return;}
+    sw.style.display='none';
     try{
-      const resp=await fetch(SHEET_CSV_URL);
-      const txt=await resp.text();
+      const r=await fetch(SHEET_CSV_URL);
+      const txt=await r.text();
       const trades=parseCSV(txt);
       renderStats(trades);
       renderTable(trades);
     }catch(e){
-      console.error('Failed to load trades',e);
+      document.getElementById('trade-tbody').innerHTML='<tr><td colspan="11" class="tbl-empty">could not load sheet â check URL or CORS settings</td></tr>';
     }
-  }
-  init();
+  })();
 </script>
 </body>
-</html>âââââââââââââââââââââââ
+                      </html>

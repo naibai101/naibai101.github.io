@@ -221,94 +221,6 @@
     <ol start="2">
       <li>File &rarr; Share &rarr; <code>Publish to web</code> &rarr; Sheet1 &rarr; <code>CSV</code> &rarr; Publish &rarr; Copy URL</li>
       <li>Open <code>trading.html</code>, find <code>SHEET_CSV_URL = ''</code>, paste URL inside the quotes</li>
-      <li>Save and upload to GitHub — stats dding:24px 64px;display:flex;justify-content:space-between;align-items:center}
-    footer p{font-size:.7rem;color:var(--faint);letter-spacing:.06em}
-
-    @media(max-width:720px){
-      nav{padding:20px 24px}
-      .page-header{padding:60px 24px 40px}
-      .magic-bg{display:none}
-      .setup-wrap,.stats-wrap,.table-wrap-outer{padding:0 24px}
-      .stats-grid{grid-template-columns:repeat(3,1fr)}
-      .stat-cell:nth-child(3){border-right:none}
-      .stat-cell:nth-child(4){border-top:1px solid var(--border)}
-      .seal-divider{padding:0 24px}
-      footer{padding:24px;flex-direction:column;gap:8px}
-    }
-
-    /* ── VN ATMOSPHERE ── */
-    .vn-overlay{
-      position:fixed;inset:0;pointer-events:none;z-index:10;
-      background:
-        radial-gradient(ellipse at 50% 35%,transparent 30%,rgba(12,7,9,.52) 100%),
-        repeating-linear-gradient(to bottom,transparent,transparent 3px,rgba(0,0,0,.028) 3px,rgba(0,0,0,.028) 4px);
-    }
-    .vn-scene{
-      display:block;
-      font-family:'Cormorant Garamond',serif;font-style:italic;
-      font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;
-      color:var(--cr);opacity:.55;margin-bottom:16px;
-    }
-    /* stats grid corner accents */
-    .stats-wrap{position:relative}
-    .stats-wrap::before{
-      content:'';position:absolute;
-      top:0;left:64px;
-      width:14px;height:14px;
-      border-top:1.5px solid rgba(200,16,46,.45);border-left:1.5px solid rgba(200,16,46,.45);
-    }
-    .stats-wrap::after{
-      content:'';position:absolute;
-      bottom:0;right:64px;
-      width:14px;height:14px;
-      border-bottom:1.5px solid rgba(200,16,46,.45);border-right:1.5px solid rgba(200,16,46,.45);
-    }
-    @media(max-width:720px){
-      .stats-wrap::before{left:24px}
-      .stats-wrap::after{right:24px}
-    }
-  </style>
-</head>
-<body>
-<div class="vn-overlay"></div>
-
-<nav>
-  <a href="index.html" class="nav-name">Naisha Sarna</a>
-  <div class="nav-links">
-    <a href="index.html">About</a>
-    <a href="projects.html">Projects</a>
-    <a href="trading.html" class="active">Trading</a>
-  </div>
-</nav>
-
-<div class="page-header">
-  <svg class="magic-bg" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="250" cy="250" r="240" stroke="#c8102e" stroke-width="1.2"/>
-    <circle cx="250" cy="250" r="200" stroke="#c8102e" stroke-width=".6"/>
-    <circle cx="250" cy="250" r="155" stroke="#c8102e" stroke-width=".8"/>
-    <circle cx="250" cy="250" r="100" stroke="#c8102e" stroke-width=".6"/>
-    <polygon points="250,30 462,135 462,365 250,470 38,365 38,135" stroke="#c8102e" stroke-width=".7" fill="none"/>
-    <line x1="250" y1="10" x2="250" y2="490" stroke="#c8102e" stroke-width=".4"/>
-    <line x1="10" y1="250" x2="490" y2="250" stroke="#c8102e" stroke-width=".4"/>
-    <line x1="74" y1="74" x2="426" y2="426" stroke="#c8102e" stroke-width=".4"/>
-    <line x1="426" y1="74" x2="74" y2="426" stroke="#c8102e" stroke-width=".4"/>
-  </svg>
-
-  <span class="vn-scene">— Battle Records —</span>
-  <h1>Trading.</h1>
-</div>
-
-<!-- SETUP (hidden when SHEET_CSV_URL is set) -->
-<div class="setup-wrap" id="setup-wrap">
-  <div class="setup-box">
-    <h3>Connect your Google Sheet to load trades</h3>
-    <ol>
-      <li>Create a Google Sheet — row 1 headers:</li>
-    </ol>
-    <div class="col-list">Ticker | Side | Entry Date | Exit Date | Entry $ | Exit $ | Shares | P&amp;L $ | P&amp;L % | Result | Notes</div>
-    <ol start="2">
-      <li>File &rarr; Share &rarr; <code>Publish to web</code> &rarr; Sheet1 &rarr; <code>CSV</code> &rarr; Publish &rarr; Copy URL</li>
-      <li>Open <code>trading.html</code>, find <code>SHEET_CSV_URL = ''</code>, paste URL inside the quotes</li>
       <li>Save and upload to GitHub — stats compute automatically from then on</li>
     </ol>
   </div>
@@ -506,4 +418,36 @@
     if(typeof TradingView!=='undefined'){
       new TradingView.widget({
         container_id:'tv-chart-container',symbol:ticker,interval:'D',
-        timezone:'Ame
+        timezone:'America/New_York',theme:'dark',style:'1',locale:'en',
+        toolbar_bg:'#130a0e',enable_publishing:false,hide_top_toolbar:false,
+        save_image:false,height:420,width:'100%',
+        backgroundColor:'#0c0709',gridColor:'rgba(48,21,30,0.5)',
+      });
+    }
+  }
+  document.getElementById('modal-close').onclick=()=>{
+    document.getElementById('chart-modal').classList.remove('open');
+  };
+  document.getElementById('chart-modal').onclick=e=>{
+    if(e.target===document.getElementById('chart-modal'))
+      document.getElementById('chart-modal').classList.remove('open');
+  };
+
+  // ── Load ───────────────────────────────────────────────────
+  (async()=>{
+    const sw=document.getElementById('setup-wrap');
+    if(!SHEET_CSV_URL){sw.style.display='block';return;}
+    sw.style.display='none';
+    try{
+      const r=await fetch(SHEET_CSV_URL);
+      const txt=await r.text();
+      const trades=parseCSV(txt);
+      renderStats(trades);
+      renderTable(trades);
+    }catch(e){
+      document.getElementById('trade-tbody').innerHTML='<tr><td colspan="11" class="tbl-empty">could not load sheet — check URL or CORS settings</td></tr>';
+    }
+  })();
+</script>
+</body>
+</html>

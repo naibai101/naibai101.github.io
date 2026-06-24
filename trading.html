@@ -236,8 +236,408 @@
     <ol>
       <li>Create a Google Sheet — row 1 headers:</li>
     </ol>
-    <div class="col-list">Ticker | Side | Entry Date | Exit Date | Entry $ | Exit $ | Shares | P&amp;L $ | P&amp;L % | Result | Notes</div>
-    <!-- Entry Date column is hidden in the table display; sheet still has the column -->
+    <div class="col-list">Ticker | Side | Exit Date | Entry $ | Exit $ | Shares | P&amp;L $ | P&amp;L % | Result | Notes</div>
+    <ol start="2">
+      <li>File &rarr; Share &rarr; <code>Publish to web</code> &rarr; Sheet1 &rarr; <code>CSV</code> &rarr; Publish &rarr; Copy URL</li>
+      <li>Open <code>trading.html</code>, find <code>SHEET_CSV_URL = ''</code>, paste URL inside the quotes</li>
+      <li>Save and upload to GitHub — stats compute automatically from then on</li>
+    </ol>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-wrap">
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-val neu" id="s-trades">—</div>
+      <div class="stat-lbl">Total Trades</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val gld" id="s-wr">—</div>
+      <div class="stat-lbl">Win Rate</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val" id="s-pnl">—</div>
+      <div class="stat-lbl">Total P&amp;L</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val neu" id="s-rr">—</div>
+      <div class="stat-lbl">Avg Win / Avg Loss</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val pos" id="s-best">—</div>
+      <div class="stat-lbl">Best Trade</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val neg" id="s-worst">—</div>
+      <div class="stat-lbl">Worst Trade</div>
+    </div>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap-outer">
+  <div class="table-hdr">
+    <span class="sec-label" style="margin-bottom:0">Trade Log</span>
+    <span class="trade-ct" id="trade-ct"></span>
+  </div>
+  <div class="tbl-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Ticker</th><th>Side</th>
+          <th>Exit Date</th>
+          <th>Entry $</th><th>Exit $</th><th>Shares</th>
+          <th>P&amp;L $</th><th>P&amp;L %</th>
+          <th>Result</th><th>Notes</th>
+        </tr>
+      </thead>
+      <tbody id="trade-tbody">
+        <tr><td colspan="10" class="tbl-empty">connect your google sheet above to summon your trades</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CHART MODAL -->
+<div class="chart-modal" id="chart-modal">
+  <div class="chart-box">
+    <div class="chart-head">
+      <div class="chart-head-left">
+        <span class="chart-ticker-name" id="modal-ticker">—</span>
+        <span class="chart-meta" id="modal-meta">—</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:20px">
+        <span class="chart-pnl" id="modal-pnl">—</span>
+        <button class="chart-close" id="modal-close">✕</button>
+      </div>
+    </div>
+    <div class="chart-body">
+      <div id="tv-chart-container"></div>
+    </div>
+  </div>
+</div>
+
+<div class="seal-divider">
+  <img src="npkuotv13msc5794cg6cp1j9cq-de7146ce504c6fcaea5736b03995912d.png" alt="command seal"/>
+</div>
+
+<footer>
+  <p>Naisha Sarna &nbsp;&bull;&nbsp; naibai101.github.io</p>
+  <p>all trades are real.</p>
+</footer>
+
+<script src="https://s3.tradingview.com/tv.js"></script>
+<script>
+  // ═══════════════════════════════════════════════════════════
+  //  GOOGLE SHEET SETUP — paste your published CSV URL here:
+  // ═══════════════════════════════════════════════════════════
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQAvqnfeLS1AskIhWJ6_i7x2un25ZxVsbWd2TDNxheBfMNnIhz-TGhVwzQMqmXGHp5igi7u77_GBraW/pub?gid=0&single=true&output=csv';
+
+  // ── CSV parser ───────────────────────────────────────────
+  function parseCSV(txt) {
+    const lines = txt.trim().split('\n');
+    if (lines.length < 2) return [];
+    const hdrs = lines[0].split(',').map(s => s.trim().replace(/^"|"$/g,''));
+    return lines.slice(1).filter(l=>l.trim()).map(line=>{
+      const vals=[]; let cur='', inQ=false;
+      for(const c of line){
+        if(c==='"'){inQ=!inQ}
+        else if(c===','&&!inQ){vals.push(cur.trim());cur=''}
+        else{cur+=c}
+      }
+      vals.push(cur.trim());
+      return Object.fromEntries(hdrs.map((h,i)=>[h,(vals[i]||'').replace(/^"|"$/g,'')]));
+    });
+  }
+
+  const fmt$ = v => {
+    const n=parseFloat(v);
+    if(isNaN(n)) return v||'—';
+    return(n>=0?'+$':'-$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  };
+  const fmtPct = v => {
+    const n=parseFloat(v);
+    if(isNaN(n)) return v||'—';
+    return(n>=0?'+':'')+n.toFixed(2)+'%';
+  };
+
+  // ── Stats ────────────────────────────────────────────────
+  function renderStats(trades){
+    const pnls=trades.map(t=>parseFloat(t['P&L $'])).filter(n=>!isNaN(n));
+    const wins=trades.filter(t=>(t['Result']||'').toLowerCase().includes('win'));
+    const losses=trades.filter(t=>(t['Result']||'').toLowerCase().includes('loss'));
+    const total=pnls.reduce((a,b)=>a+b,0);
+    const wr=trades.length?Math.round(wins.length/trades.length*100):0;
+    const best=pnls.length?Math.max(...pnls):null;
+    const worst=pnls.length?Math.min(...pnls):null;
+    const avgW=wins.length?wins.reduce((a,t)=>a+parseFloat(t['P&L $']||0),0)/wins.length:null;
+    const avgL=losses.length?Math.abs(losses.reduce((a,t)=>a+parseFloat(t['P&L $']||0),0)/losses.length):null;
+    const rr=avgW&&avgL?(avgW/avgL).toFixed(2)+'x':'—';
+    document.getElementById('s-trades').textContent=trades.length||'—';
+    document.getElementById('s-wr').textContent=trades.length?wr+'%':'—';
+    const pe=document.getElementById('s-pnl');
+    pe.textContent=pnls.length?fmt$(total):'—';
+    pe.className='stat-val '+(total>=0?'pos':'neg');
+    document.getElementById('s-rr').textContent=rr;
+    document.getElementById('s-best').textContent=best!==null?fmt$(best):'—';
+    document.getElementById('s-worst').textContent=worst!==null?fmt$(worst):'—';
+  }
+
+  // ── Table ──────────────────────────────────────────────
+  function renderTable(trades){
+    const ct=document.getElementById('trade-ct');
+    ct.textContent=trades.length+' trade'+(trades.length!==1?'s':'');
+    const tbody=document.getElementById('trade-tbody');
+    if(!trades.length){
+      tbody.innerHTML='<tr><td colspan="10" class="tbl-empty">no trades yet — connect your sheet above</td></tr>';
+      return;
+    }
+    tbody.innerHTML=[...trades].reverse().map(t=>{
+      const pnl=parseFloat(t['P&L $']);
+      const pct=parseFloat(t['P&L %']);
+      const res=(t['Result']||'').toLowerCase();
+      const side=(t['Side']||'').toLowerCase();
+      const pnlCls=isNaN(pnl)?'td-mu':pnl>=0?'td-pos':'td-neg';
+      const pctCls=isNaN(pct)?'td-mu':pct>=0?'td-pos':'td-neg';
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trading — Naisha Sarna</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0c0709;--surf:#130a0e;--surf2:#1c1016;--border:#30151e;
+      --cr:#c8102e;--cr-hi:#e8283e;--gold:#4ab8d4;
+      --text:#f0dce2;--muted:#7a5862;--faint:#3d1822;
+      --green:#4a9e6b;--loss:#c05050;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden}
+
+    nav{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:26px 64px;border-bottom:1px solid var(--border);
+      position:sticky;top:0;background:rgba(12,7,9,.95);backdrop-filter:blur(8px);z-index:200;
+    }
+    .nav-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;letter-spacing:.1em;color:var(--text);text-decoration:none}
+    .nav-links{display:flex;gap:34px}
+    .nav-links a{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:var(--text)}
+    .nav-links a.active{color:var(--cr)}
+
+    /* page header */
+    .page-header{
+      position:relative;overflow:hidden;
+      max-width:1000px;margin:0 auto;padding:90px 64px 60px;
+    }
+    .magic-bg{
+      position:absolute;right:-80px;top:50%;transform:translateY(-50%);
+      width:340px;height:340px;opacity:.14;pointer-events:none;
+      animation:spin 70s linear infinite;
+    }
+    @keyframes spin{to{transform:translateY(-50%) rotate(360deg)}}
+
+    .sec-label{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cr);padding-left:12px;border-left:1.5px solid var(--cr);margin-bottom:20px;display:block}
+    .page-header h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,7vw,4.5rem);font-weight:300;line-height:1;margin-bottom:14px}
+    .page-header p{color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem}
+
+    /* setup box */
+    .setup-wrap{max-width:1000px;margin:40px auto 0;padding:0 64px}
+    .setup-box{
+      border:1px solid var(--faint);background:var(--surf);padding:26px 30px;
+      border-left:2px solid var(--gold);
+      position:relative;
+    }
+    .setup-box::before{
+      content:'';position:absolute;top:-1px;left:-1px;
+      width:13px;height:13px;
+      border-top:1.5px solid var(--cr);border-left:1.5px solid var(--cr);
+    }
+    .setup-box::after{
+      content:'';position:absolute;bottom:-1px;right:-1px;
+      width:13px;height:13px;
+      border-bottom:1.5px solid var(--cr);border-right:1.5px solid var(--cr);
+    }
+    .setup-box h3{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--gold);margin-bottom:14px}
+    .setup-box ol{margin-left:18px;color:var(--muted);font-size:.82rem;line-height:2.1}
+    .setup-box code{background:var(--surf2);border:1px solid var(--border);padding:1px 8px;font-size:.76rem;color:var(--text);font-family:'Courier New',monospace}
+    .col-list{margin-top:14px;padding:12px 16px;background:var(--surf2);border:1px solid var(--border);font-family:'Courier New',monospace;font-size:.72rem;color:var(--muted);overflow-x:auto;white-space:nowrap}
+
+    /* stats strip */
+    .stats-wrap{max-width:1000px;margin:50px auto 0;padding:0 64px}
+    .stats-grid{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid var(--border)}
+    .stat-cell{padding:22px 18px;border-right:1px solid var(--border);text-align:center}
+    .stat-cell:last-child{border-right:none}
+    .stat-val{font-family:'Cormorant Garamond',serif;font-size:1.85rem;font-weight:400;line-height:1;margin-bottom:7px}
+    .stat-lbl{font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+    .pos{color:var(--green)}.neg{color:var(--loss)}.neu{color:var(--text)}.gld{color:var(--gold)}
+
+    /* table */
+    .table-wrap-outer{max-width:1000px;margin:50px auto 0;padding:0 64px}
+    .table-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .trade-ct{font-size:.72rem;color:var(--muted)}
+    .tbl-scroll{overflow-x:auto;border:1px solid var(--border)}
+
+    table{width:100%;border-collapse:collapse;font-size:.81rem;min-width:780px}
+    thead th{
+      background:var(--surf);padding:12px 16px;text-align:left;
+      font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;
+      color:var(--muted);font-weight:400;white-space:nowrap;
+      border-bottom:1px solid var(--border);
+    }
+    tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:var(--surf)}
+    tbody td{padding:12px 16px;white-space:nowrap}
+
+    .ticker{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:600;letter-spacing:.06em;color:var(--text)}
+    .badge{display:inline-block;padding:2px 9px;font-size:.63rem;letter-spacing:.09em;text-transform:uppercase}
+    .b-long{background:rgba(74,158,107,.12);color:var(--green);border:1px solid rgba(74,158,107,.25)}
+    .b-short{background:rgba(192,80,80,.12);color:var(--loss);border:1px solid rgba(192,80,80,.25)}
+    .b-win{background:rgba(74,158,107,.1);color:var(--green);border:1px solid rgba(74,158,107,.2)}
+    .b-loss{background:rgba(192,80,80,.1);color:var(--loss);border:1px solid rgba(192,80,80,.2)}
+
+    .td-pos{color:var(--green);font-weight:500}
+    .td-neg{color:var(--loss);font-weight:500}
+    .td-mu{color:var(--muted)}
+    .td-note{color:var(--muted);max-width:190px;white-space:normal;font-size:.76rem;line-height:1.5}
+    .tbl-empty{text-align:center;padding:48px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem}
+
+    /* clickable ticker */
+    .ticker{cursor:pointer;transition:color .15s}
+    .ticker:hover{color:var(--cr)}
+    .ticker-row td:first-child{position:relative}
+
+    /* chart modal */
+    .chart-modal{
+      display:none;position:fixed;inset:0;z-index:1000;
+      background:rgba(0,0,0,.82);backdrop-filter:blur(6px);
+      align-items:center;justify-content:center;
+    }
+    .chart-modal.open{display:flex}
+    .chart-box{
+      background:var(--surf);border:1px solid var(--border);
+      width:min(900px,95vw);max-height:90vh;overflow:hidden;
+      display:flex;flex-direction:column;
+    }
+    .chart-head{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:18px 24px;border-bottom:1px solid var(--border);flex-shrink:0;
+    }
+    .chart-head-left{display:flex;flex-direction:column;gap:4px}
+    .chart-ticker-name{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;letter-spacing:.06em}
+    .chart-meta{font-size:.72rem;color:var(--muted);letter-spacing:.04em}
+    .chart-pnl{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400}
+    .chart-close{
+      background:none;border:none;color:var(--muted);font-size:1.4rem;
+      cursor:pointer;padding:4px 8px;transition:color .15s;line-height:1;
+    }
+    .chart-close:hover{color:var(--text)}
+    .chart-body{flex:1;min-height:0}
+    #tv-chart-container{width:100%;height:420px}
+
+    /* divider */
+    .seal-divider{display:flex;align-items:center;gap:18px;max-width:1000px;margin:72px auto;padding:0 64px}
+    .seal-divider::before,.seal-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+    .seal-divider img{width:36px;height:40px;opacity:.55;flex-shrink:0;object-fit:contain;filter:drop-shadow(0 0 6px var(--cr))}
+
+    /* vn cursor */
+    .vn-cursor{
+      display:inline-block;color:var(--cr);font-size:.6rem;
+      margin-left:7px;vertical-align:middle;
+      animation:vnblink 1.5s ease-in-out infinite;
+    }
+    @keyframes vnblink{0%,100%{opacity:1}50%{opacity:0}}
+
+    footer{border-top:1px solid var(--border);padding:24px 64px;display:flex;justify-content:space-between;align-items:center}
+    footer p{font-size:.7rem;color:var(--faint);letter-spacing:.06em}
+
+    @media(max-width:720px){
+      nav{padding:20px 24px}
+      .page-header{padding:60px 24px 40px}
+      .magic-bg{display:none}
+      .setup-wrap,.stats-wrap,.table-wrap-outer{padding:0 24px}
+      .stats-grid{grid-template-columns:repeat(3,1fr)}
+      .stat-cell:nth-child(3){border-right:none}
+      .stat-cell:nth-child(4){border-top:1px solid var(--border)}
+      .seal-divider{padding:0 24px}
+      footer{padding:24px;flex-direction:column;gap:8px}
+    }
+
+    /* ── VN ATMOSPHERE ── */
+    .vn-overlay{
+      position:fixed;inset:0;pointer-events:none;z-index:10;
+      background:
+        radial-gradient(ellipse at 50% 35%,transparent 30%,rgba(12,7,9,.52) 100%),
+        repeating-linear-gradient(to bottom,transparent,transparent 3px,rgba(0,0,0,.028) 3px,rgba(0,0,0,.028) 4px);
+    }
+    .vn-scene{
+      display:block;
+      font-family:'Cormorant Garamond',serif;font-style:italic;
+      font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;
+      color:var(--cr);opacity:.85;margin-bottom:16px;
+    }
+    /* stats grid corner accents */
+    .stats-wrap{position:relative}
+    .stats-wrap::before{
+      content:'';position:absolute;
+      top:0;left:64px;
+      width:14px;height:14px;
+      border-top:1.5px solid rgba(200,16,46,.45);border-left:1.5px solid rgba(200,16,46,.45);
+    }
+    .stats-wrap::after{
+      content:'';position:absolute;
+      bottom:0;right:64px;
+      width:14px;height:14px;
+      border-bottom:1.5px solid rgba(200,16,46,.45);border-right:1.5px solid rgba(200,16,46,.45);
+    }
+    @media(max-width:720px){
+      .stats-wrap::before{left:24px}
+      .stats-wrap::after{right:24px}
+    }
+  </style>
+</head>
+<body>
+<div class="vn-overlay"></div>
+
+<nav>
+  <a href="index.html" class="nav-name">Naisha Sarna</a>
+  <div class="nav-links">
+    <a href="index.html">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="trading.html" class="active">Trading</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <svg class="magic-bg" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="250" cy="250" r="240" stroke="#c8102e" stroke-width="1.2"/>
+    <circle cx="250" cy="250" r="200" stroke="#c8102e" stroke-width=".6"/>
+    <circle cx="250" cy="250" r="155" stroke="#c8102e" stroke-width=".8"/>
+    <circle cx="250" cy="250" r="100" stroke="#c8102e" stroke-width=".6"/>
+    <polygon points="250,30 462,135 462,365 250,470 38,365 38,135" stroke="#c8102e" stroke-width=".7" fill="none"/>
+    <line x1="250" y1="10" x2="250" y2="490" stroke="#c8102e" stroke-width=".4"/>
+    <line x1="10" y1="250" x2="490" y2="250" stroke="#c8102e" stroke-width=".4"/>
+    <line x1="74" y1="74" x2="426" y2="426" stroke="#c8102e" stroke-width=".4"/>
+    <line x1="426" y1="74" x2="74" y2="426" stroke="#c8102e" stroke-width=".4"/>
+  </svg>
+
+  <span class="vn-scene">— Battle Records —</span>
+  <h1>Trading.</h1>
+</div>
+
+<!-- SETUP (hidden when SHEET_CSV_URL is set) -->
+<div class="setup-wrap" id="setup-wrap">
+  <div class="setup-box">
+    <h3>Connect your Google Sheet to load trades</h3>
+    <ol>
+      <li>Create a Google Sheet — row 1 headers:</li>
+    </ol>
+    <div class="col-list">Ticker | Side | Exit Date | Entry $ | Exit $ | Shares | P&amp;L $ | P&amp;L % | Result | Notes</div>
     <ol start="2">
       <li>File &rarr; Share &rarr; <code>Publish to web</code> &rarr; Sheet1 &rarr; <code>CSV</code> &rarr; Publish &rarr; Copy URL</li>
       <li>Open <code>trading.html</code>, find <code>SHEET_CSV_URL = ''</code>, paste URL inside the quotes</li>
@@ -405,7 +805,7 @@
       const resBadge=res.includes('win')?'b-win':res.includes('loss')?'b-loss':'';
       const tk=t['Ticker']||'';
       return `<tr class="ticker-row">
-        <td><span class="ticker" onclick="openChart('${tk}','${t['Entry Date']||''}','${t['Exit Date']||''}','${t['P&L $']||''}','${t['P&L %']||''}')">${tk||'—'}</span></td>
+        <td><span class="ticker" onclick="openChart('${tk}','${t["Exit Date"]||""}','${t['P&L $']||''}','${t['P&L %']||''}')">${tk||'—'}</span></td>
         <td><span class="badge ${sideBadge}">${t['Side']||'—'}</span></td>
         <td class="td-mu">${t['Exit Date']||'—'}</td>
         <td class="td-mu">${t['Entry $']?'$'+parseFloat(t['Entry $']).toFixed(2):'—'}</td>
@@ -420,14 +820,14 @@
   }
 
   // ── Chart modal ────────────────────────────────────────────
-  function openChart(ticker,entryDate,exitDate,pnlD,pnlP){
+  function openChart(ticker,exitDate,pnlD,pnlP){
     if(!ticker)return;
     document.getElementById('modal-ticker').textContent=ticker;
     const pnl=parseFloat(pnlD);
     const pnlEl=document.getElementById('modal-pnl');
     pnlEl.textContent=(isNaN(pnl)?pnlD:fmt$(pnl))+(pnlP?' / '+fmtPct(parseFloat(pnlP)):'');
     pnlEl.className='chart-pnl '+(isNaN(pnl)?'neu':pnl>=0?'td-pos':'td-neg');
-    document.getElementById('modal-meta').textContent=entryDate+(exitDate?' → '+exitDate:'');
+    document.getElementById('modal-meta').textContent=exitDate||'';
     document.getElementById('chart-modal').classList.add('open');
     document.getElementById('tv-chart-container').innerHTML='';
     if(typeof TradingView!=='undefined'){
@@ -455,4 +855,14 @@
     sw.style.display='none';
     try{
       const r=await fetch(SHEET_CSV_URL);
-      co
+      const txt=await r.text();
+      const trades=parseCSV(txt);
+      renderStats(trades);
+      renderTable(trades);
+      }catch(e){
+      document.getElementById('trade-tbody').innerHTML='<tr><td colspan="10" class="tbl-empty">could not load sheet — check URL or CORS settings</td></tr>';
+    }
+  })();
+</script>
+</body>
+</html>

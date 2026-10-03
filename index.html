@@ -312,7 +312,15 @@
     @media(max-width:700px){
       .reading{padding:0 24px}
       .book-list{grid-template-columns:1fr}
+    } 
+    .book.done{border-color:rgba(200,16,46,.45)}
+    .book-status{
+      display:block;margin-top:12px;
+      font-family:'Cormorant Garamond',serif;font-style:italic;
+      font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;
+      color:var(--cr);opacity:.85;
     }
+    .book-status::before{content:'✓  '}
     .skill-tag:hover{border-color:var(--cr);color:var(--text);box-shadow:0 0 8px rgba(200,16,46,.1)}
   </style>
 </head>
@@ -441,7 +449,7 @@
 
 <!-- ── READING NOW ── -->
 <div class="reading">
-  <span class="sec-label">Reading Now</span>
+  <span class="sec-label">Readings</span>
   <div class="book-list">
     <div class="book">
       <div class="book-title">An Elementary Introduction to Mathematical Finance</div>

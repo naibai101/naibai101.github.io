@@ -261,8 +261,8 @@
       <div class="stat-lbl">Total P&amp;L</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-val neu" id="s-rr">—</div>
-      <div class="stat-lbl">Avg Win / Avg Loss</div>
+      <div class="stat-val" id="s-ev">—</div>
+      <div class="stat-lbl">Expected Value</div>
     </div>
     <div class="stat-cell">
       <div class="stat-val pos" id="s-best">—</div>
@@ -379,7 +379,9 @@
     const pe=document.getElementById('s-pnl');
     pe.textContent=pnls.length?fmt$(total):'—';
     pe.className='stat-val '+(total>=0?'pos':'neg');
-    document.getElementById('s-rr').textContent=rr;
+    document.getElementById('s-rr').textContent=rr;const evEl=document.getElementById('s-ev');
+    evEl.textContent=ev!==null?fmt$(ev):'—';
+    evEl.className='stat-val '+(ev===null?'neu':ev>=0?'pos':'neg');
     document.getElementById('s-best').textContent=best!==null?fmt$(best):'—';
     document.getElementById('s-worst').textContent=worst!==null?fmt$(worst):'—';
   }
@@ -772,9 +774,11 @@
     const wr=trades.length?Math.round(wins.length/trades.length*100):0;
     const best=pnls.length?Math.max(...pnls):null;
     const worst=pnls.length?Math.min(...pnls):null;
-    const avgW=wins.length?wins.reduce((a,t)=>a+parseFloat(t['P&L $']||0),0)/wins.length:null;
-    const avgL=losses.length?Math.abs(losses.reduce((a,t)=>a+parseFloat(t['P&L $']||0),0)/losses.length):null;
-    const rr=avgW&&avgL?(avgW/avgL).toFixed(2)+'x':'—';
+    const avgW=wins.length?wins.reduce((a,t)=>a+parseFloat(t['P&L $']||0),0)/wins.length:0;
+    const avgL=losses.length?Math.abs(losses.reduce((a,t)=>a+parseFloat(t['P&L $']||0),0)/losses.length):0;
+    const winP=trades.length?wins.length/trades.length:0;
+    const lossP=trades.length?losses.length/trades.length:0;
+    const ev=trades.length?(winP*avgW)-(lossP*avgL):null;
     document.getElementById('s-trades').textContent=trades.length||'—';
     document.getElementById('s-wr').textContent=trades.length?wr+'%':'—';
     const pe=document.getElementById('s-pnl');
